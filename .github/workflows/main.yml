@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install dependencies
+      run: poetry install
+
+    - name: Build executables
+      run: |
+        poetry build
+        poetry run pyinstaller --onefile pdf_rename/main.py
+
+    - name: Display artifacts
+      run: ls -l dist/
